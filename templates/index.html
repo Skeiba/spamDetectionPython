@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Spam Detector</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <script>
+        function closePopup() {
+            const popup = document.querySelector('.popup');
+            const overlay = document.querySelector('.overlay');
+
+            popup.style.animation = 'fadeOut 0.5s forwards';
+            overlay.style.animation = 'fadeOut 0.5s forwards';
+
+            setTimeout(() => {
+                popup.style.display = 'none';
+                overlay.style.display = 'none';
+                popup.style.animation = '';
+                overlay.style.animation = '';
+            }, 500);
+        }
+
+        async function checkSpam(event) {
+            event.preventDefault(); 
+        
+            const emailMessage = document.getElementById('email_message').value;
+        
+            if (!emailMessage.trim()) {
+                alert("Please enter a message to analyze.");
+                return;
+            }
+        
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email_message: emailMessage })
+                });
+        
+                if (response.ok) {
+                    const data = await response.json();
+                    const popup = document.querySelector('.popup');
+                    const overlay = document.querySelector('.overlay');
+        
+                    popup.querySelector('h2').textContent = `${data.result}`;
+         
+                    if (data.result.toLowerCase() === 'spam') {
+                        overlay.style.backgroundColor = 'rgba(255, 32, 32, 0.8)';
+                    } else if (data.result.toLowerCase() === 'ham') {
+                        overlay.style.backgroundColor = 'rgba(9, 255, 0, 0.8)';
+                    }
+        
+                    popup.style.display = 'block';
+                    overlay.style.display = 'block';
+        
+                    popup.style.animation = 'bounceIn 0.5s ease';
+                    overlay.style.animation = 'fadeIn 0.5s';
+                } else {
+                    alert('An error occurred while processing your request.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An unexpected error occurred.');
+            }
+        }        
+    </script>
+</head>
+<body>
+    <div class="overlay" onclick="closePopup()"></div>
+    <div class="popup">
+        <h2>Result</h2>
+    </div>
+
+    <div class="container">
+        <h1>Email Spam Detector</h1>
+        <p>Welcome to our email spam detection website! Enter your email message below, and our system will analyze it to determine if it's <span style="color:rgba(255, 32, 32, 0.8); font-weight: 600;">SPAM</span> or <span style="color:rgba(9, 255, 0, 0.8); font-weight: 600;">HAM</span>.</p>
+        <form onsubmit="checkSpam(event)">
+            <textarea id="email_message" name="email_message" placeholder="Type your email message here..."></textarea><br>
+            <button type="submit">Analyse</button>
+        </form>
+    </div>
+
+    <footer>
+        Created by <a href="https://github.com/Skeiba">Salaheddine</a>
+        and <a href="https://github.com/Yassin-Zaher">Yassin</a>
+    </footer>
+</body>
+</html>
