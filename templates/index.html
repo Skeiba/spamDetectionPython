@@ -68,7 +68,21 @@
                 console.error('Error:', error);
                 alert('An unexpected error occurred.');
             }
-        }        
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const container = document.querySelector('.container');
+            const textarea = document.querySelector('textarea');
+            const button = document.querySelector('button');
+            const footer = document.querySelector('footer');
+
+            body.classList.toggle('light-mode');
+            container.classList.toggle('light-mode');
+            textarea.classList.toggle('light-mode');
+            button.classList.toggle('light-mode');
+            footer.classList.toggle('light-mode');
+        }
     </script>
 </head>
 <body>
@@ -77,18 +91,25 @@
         <h2>Result</h2>
     </div>
 
-    <div class="container">
-        <h1>Email Spam Detector</h1>
-        <p>Welcome to our email spam detection website! Enter your email message below, and our system will analyze it to determine if it's <span style="color:rgba(255, 32, 32, 0.8); font-weight: 600;">SPAM</span> or <span style="color:rgba(9, 255, 0, 0.8); font-weight: 600;">HAM</span>.</p>
-        <form onsubmit="checkSpam(event)">
-            <textarea id="email_message" name="email_message" placeholder="Type your email message here..."></textarea><br>
-            <button type="submit">Analyse</button>
-        </form>
+    <div class="theme-switch">
+        <label class="switch">
+            <input type="checkbox" onclick="toggleTheme()">
+            <span class="slider round"></span>
+        </label>
     </div>
 
+    <div class="container">
+        <h1>Détecteur de Spam Email</h1>
+        <p>Bienvenue sur notre site de détection de spam ! Entrez votre message email ci-dessous, et notre système l'analysera pour déterminer s'il s'agit de <span style="color:rgba(255, 32, 32, 0.8); font-weight: 600;">SPAM</span> ou de <span style="color:rgba(9, 255, 0, 0.8); font-weight: 600;">HAM</span>.</p>
+        <form onsubmit="checkSpam(event)">
+            <textarea id="email_message" name="email_message" placeholder="Tapez votre message email ici..."></textarea><br>
+            <button type="submit">Analyser</button>
+        </form>
+    </div>
+    
     <footer>
-        Created by <a href="https://github.com/Skeiba">Salaheddine</a>
-        and <a href="https://github.com/Yassin-Zaher">Yassin</a>
+        Créé par <a href="https://github.com/Skeiba">Salaheddine</a>
+        et <a href="https://github.com/Yassin-Zaher">Yassin</a>
     </footer>
 </body>
 </html>
